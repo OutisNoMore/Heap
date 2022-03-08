@@ -9,6 +9,7 @@
 #include <iostream>
 
 #include "Heap.h"
+#include "Pixel.h"
 
 /***********************************************************
 * Class CompareMin
@@ -56,145 +57,6 @@ public:
        return false;
     }
 };
-
-
-/***********************************************************
-* Class pixel
-*_________________________________________________________
-* This is a custom data type that stores the rgb color
-* of a pixel. The distance of the pixel from black is 
-* calculated and used to roughly estimate how dark of 
-* a shade the color is.
-*_________________________________________________________
-* INPUTS
-*   _red (int)    // IN - red value of color
-*   _green (int)  // IN - green value of color
-*   _blue (int)   // IN - blue value of color
-*   _name (std::string) // IN - color name
-*
-* POST-CONDITIONS
-*   Distance between color and black is calculated.
-***********************************************************/
-class pixel{
-private:
-  int _red;   // IN - red value of color
-  int _green; // IN - green value of color
-  int _blue;  // IN - blue value of color
-  double _distance; // IN - measures distance from black (0, 0, 0)
-  std::string _color; // IN - common name of color\
-
-public:
-  /******************************
-   ** CONSTRUCTOR & DESTRUCTOR **
-   ******************************/
-   
-/**********************************************************
- *
- * CONSTRUCTOR pixel
- *_________________________________________________________
- * This is the default constructor. All values are set to 0
- * or null.
- *_________________________________________________________
- * PRE-CONDITIONS
- *   none
- *
- * POST-CONDITIONS
- *   This will initialize all values to 0 or null
- ***********************************************************/
-  pixel(): _red(0), _green(0), _blue(0), _distance(0.0), _color("NULL"){};
-
-/**********************************************************
- *
- * CONSTRUCTOR pixel
- *_________________________________________________________
- * This constructor receives rgb values and the name of
- * the color.
- *_________________________________________________________
- * PRE-CONDITIONS
- *   The following need pre-defined values:
- *    r (int) // IN - red value of color
- *    g (int) // IN - green value of color
- *    b (int) // IN - blue value of color
- *    color (Std::string) // IN - name of color
- *
- * POST-CONDITIONS
- *   This function will set all data to the given values.
- *   The distance of the color from black is also calculated.
- ***********************************************************/
-  pixel(int r, int g, int b, std::string color){
-    _red = r;
-    _green = g;
-    _blue = b;
-    _distance = r*r + g*g + b*b;
-    _color = color;
-  } 
-
-  /***************
-   ** ACCESSORS **
-   ***************/
-
-/**********************************************************
- *
- * ACCESSOR operator<(const pixel& p);
- *_________________________________________________________
- * This function receives a reference to a pixel and
- * compares the distances. True is returned if the calling
- * pixel is darker.
- *_________________________________________________________
- * PRE-CONDITIONS
- *   p (pixel&) // IN - reference to pixel to compare with
- *
- * POST-CONDITIONS
- *   This function will return true if the calling pixel is
- *   closer to black, or darker than the other pixel.
- ***********************************************************/
-  bool operator<(const pixel& p){
-    return this->_distance < p._distance;
-  }
-
-  
-/**********************************************************
- *
- * ACCESSOR operator>(const pixel& p);
- *_________________________________________________________
- * This function receives a reference to a pixel and
- * compares the distances. True is returned if the calling
- * pixel is lighter.
- *_________________________________________________________
- * PRE-CONDITIONS
- *   p (pixel&) // IN - reference to pixel to compare with
- *
- * POST-CONDITIONS
- *   This function will return true if the calling pixel is
- *   farther to black, or lighter than the other pixel.
- ***********************************************************/
-  bool operator>(const pixel& p){
-    return this->_distance > p._distance;
-  }  
-
-  
-/**********************************************************
- *
- * ACCESSOR operator<<(std::ostream& os, const pixel& p);
- *_________________________________________________________
- * This function receives a reference to a stream output
- * operator and a reference to a pixel. The name of the
- * color of the pixel is output.
- *_________________________________________________________
- * PRE-CONDITIONS
- *  os (std::ostream&) // IN - reference to stream output
- *   p (pixel&) // IN - reference to pixel to compare with
- *
- * POST-CONDITIONS
- *   This function will return the name of the
- *   color of the pixel.
- ***********************************************************/
-  friend std::ostream& operator<<(std::ostream& os, const pixel& p){
-    os << "(" << p._color << ")";
-    return os;
-  }
-};
-
 /************************************************************
 *
 * Dynamic Array Heap
@@ -308,6 +170,7 @@ try{
   std::cout << "Custom data type - pixel class" << std::endl;
   std::cout << "Sort by darkest shade at root" << std::endl << std::endl;
   // Min heap or darkest color at root node
+  pixel myPixel(255, 255, 255, "white");
   Heap<pixel, CompareMin<pixel>> pixels;
 
   std::cout << "Insert" << std::endl;
@@ -338,7 +201,6 @@ try{
   std::cout << "Sort by lightest shade at root" << std::endl << std::endl; 
   // Max heap or lightest color at root node
   Heap<pixel, CompareMax<pixel>> pixels2;
-
   std::cout << "Insert" << std::endl;
   pixels2.insert(pixel(255, 255 ,255, "white"));
   pixels2.insert(pixel(0, 0, 0, "black"));      
@@ -362,7 +224,6 @@ try{
   pixels2.remove();
   pixels2.remove();
   std::cout << std::endl; 
-
   } catch(const char* msg){
     std::cout << msg << std::endl;
   }

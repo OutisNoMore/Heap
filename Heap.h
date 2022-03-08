@@ -2,6 +2,8 @@
 #define _HEAP_H
 
 #include <iostream>
+#include <algorithm>
+#include <iterator>
 
 const int SIZE = 100;
 
@@ -21,7 +23,7 @@ class Heap {                      // heap interface
     Heap& operator=(const Heap& source); // overloaded assignment operator
 		void insert(E value);                // insert new data
 		E remove();                          // remove root data
-    void heapify(E anArray[], int size); //function to create a heap out of a given array of elements (in other words heapify)
+    void heapify(E anArray[], int size); // function to create a heap out of a given array of elements (in other words heapify)
 
   /***************
    ** ACCESSORS **
@@ -175,7 +177,6 @@ Heap<E, C>& Heap<E, C>::operator=(const Heap& source) // heap to copy from
   return *this;
 }
 
-
 /***********************************************************
 * bubbleUp(int node)
 *_________________________________________________________
@@ -198,15 +199,12 @@ Heap<E, C>& Heap<E, C>::operator=(const Heap& source) // heap to copy from
 template <typename E, typename C>
 void Heap<E, C>::bubbleUp(int node) // node to bubbleUp
 {
-  int parent  = (node-1)/2; // get parent node
-  while(parent >= 0 && comparator(heapArray[node], heapArray[parent])){
-    E temp = heapArray[node];
-    heapArray[node] = heapArray[parent];
-    heapArray[parent] = temp;
+  int parent = (node-1)/2; // get parent node
+  if(node != 0 && comparator(heapArray[node], heapArray[parent])){
+    std::swap(heapArray[node], heapArray[parent]);
     preorder(heapArray, count); // show intermediate heap
     // go up one level
-    node = parent;
-    parent = (parent-1)/2;
+    bubbleUp(parent);
   }
 }
 
@@ -255,8 +253,7 @@ void Heap<E, C>::insert(E value) // value to insert
 template <typename E, typename C>
 E Heap<E, C>::remove()
 {
-  heapArray[0] = heapArray[count-1];
-  --count;
+  heapArray[0] = heapArray[--count];
   //call bubble to validate heap here 
   //(pass in comparator to afffect if heap will have
   // min root or max root)
@@ -293,28 +290,26 @@ void Heap<E, C>::bubbleDown(E anArray[], // heap as an array
   int rightChild = 2*node + 2;
   int compare;
 
-  while(leftChild < size || rightChild < size){
-    // only leftChild exists
-    if(rightChild >= size){
-      compare = leftChild;
-    } else{
-      // find the child node to compare with
-      comparator(anArray[leftChild], anArray[rightChild]) ? compare = leftChild : compare = rightChild;
-    }
-    
-    if(comparator(anArray[compare], anArray[node])){
-      E temp = anArray[node];
-      anArray[node] = anArray[compare];
-      anArray[compare] = temp;
-      preorder(anArray, size); // show intermediate heap
-    } else{
-      break;
-    }
-
-    node = compare;
-    leftChild = 2*node+1;
-    rightChild = 2*node+2;
+  if(leftChild >= size && rightChild >= size){
+    // no children do nothing
+    return;
   }
+  else if(leftChild < size && rightChild < size){
+    // 2 children, find the correct child
+    comparator(anArray[leftChild], anArray[rightChild]) ? compare = leftChild : compare = rightChild;
+  }
+  else if(leftChild < size){
+    // only left child exists
+    compare = leftChild;
+  }
+  else{
+    //only right child exists
+    compare = rightChild;
+  }
+  // Swap with the correct child
+  std::swap(anArray[node], anArray[compare]);
+  // continue building down
+  this->bubbleDown(anArray, size, compare);
 }
 
 /***********************************************************
@@ -475,10 +470,8 @@ template <typename E, typename C>
 void Heap<E, C>::expand()
 {
   E* temp = new E[count*2];
-  for(int i = 0; i < count; i++){
-    temp[i] = heapArray[i];
-  }
-  count = 2*count;
+  std::copy(heapArray, &heapArray[count-1], temp);
+  count = count * 2;
 
   delete [] heapArray;
   heapArray = temp;
