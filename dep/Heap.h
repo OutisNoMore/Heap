@@ -42,6 +42,7 @@ class Heap {                      // heap interface
     void copyHelper(const Heap& source, int node);      // copy or assign from a heap
     void bubbleUp(int node=0);                          // bubble up elements
     void bubbleDown(E anArray[], int size, int node=0); // bubble down elements
+    void buildHeap(E anArray[], int size, int node=0);  // build heap from heapify
 
   /**********************
    ** ACCESSOR HELPERS **
@@ -202,7 +203,6 @@ void Heap<E, C>::bubbleUp(int node) // node to bubbleUp
   int parent = (node-1)/2; // get parent node
   if(node != 0 && comparator(heapArray[node], heapArray[parent])){
     std::swap(heapArray[node], heapArray[parent]);
-    preorder(heapArray, count); // show intermediate heap
     // go up one level
     bubbleUp(parent);
   }
@@ -231,7 +231,6 @@ void Heap<E, C>::insert(E value) // value to insert
   }
 
   heapArray[count++] = value;
-  preorder(heapArray, count);
   bubbleUp(count-1);
 }
 /***********************************************************
@@ -257,7 +256,6 @@ E Heap<E, C>::remove()
   //call bubble to validate heap here 
   //(pass in comparator to afffect if heap will have
   // min root or max root)
-  preorder(heapArray, count);
   this->bubbleDown(heapArray, count, 0);
   return heapArray[count];
 }
@@ -355,10 +353,59 @@ template <typename E, typename C>
 void Heap<E, C>::heapify(E anArray[], // heap as array
                          int size)    // size of heap
 {
-  int node = (size-2)/2; // (size-1)-1 
+  int node = (size-2)/2; // start from middle of tree
   while(node >= 0){
-    bubbleDown(anArray, size, node--);
+    buildHeap(anArray, size, node--);
   }
+}
+
+/***********************************************************
+* buildHeap(int node)
+*_________________________________________________________
+* This function traverses the heap starting ffrom the given 
+* node, making sure that the heap has the proper order.
+*_________________________________________________________
+* PRE-CONDITIONS
+*   The following need previously defined values:
+*   int node: node to start from(defaults to root)
+*
+* POST-CONDITIONS
+*   traverses heap from root or specified node,
+*   swapping the child and parent node if the comparator
+*   returns a value of true. Stops if comparator returns false
+*   or all nodes have been visited
+***********************************************************/
+template <typename E, typename C>
+void Heap<E, C>::buildHeap(E anArray[],
+                           int size,
+                           int node)
+{
+  int leftChild = 2*node + 1;
+  int rightChild = 2*node + 2;
+  int compare;
+
+  if(leftChild >= size && rightChild >= size){
+    // no children do nothing
+    return;
+  }
+  else if(leftChild < size && rightChild < size){
+    // 2 children, find the correct child
+    comparator(anArray[leftChild], anArray[rightChild]) ? compare = leftChild : compare = rightChild;
+  }
+  else if(leftChild < size){
+    // only left child exists
+    compare = leftChild;
+  }
+  else{
+    //only right child exists
+    compare = rightChild;
+  }
+  if(comparator(anArray[compare], anArray[node])){
+    // Swap with the correct child
+    std::swap(anArray[node], anArray[compare]);
+  }
+  // continue building down
+  this->buildHeap(anArray, size, compare);
 }
 
 /***********************************************************

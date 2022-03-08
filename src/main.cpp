@@ -85,51 +85,40 @@ try{
   std::cout << std::endl;
 
   std::cout << "Insert" << std::endl;
-  myHeap.insert(67);
-  myHeap.insert(88);
-  myHeap.insert(77);
-  myHeap.insert(52);
-  myHeap.insert(44);
-  myHeap.insert(11);
-  myHeap.insert(66);
-  myHeap.insert(93);
+  int test[8] = {67, 88, 77, 52, 44, 11, 66, 93};
+  for(int i = 0; i < 8; i++){
+    myHeap.insert(test[i]);
+    myHeap.preorder();
+  }
   std::cout << std::endl;
   
   std::cout << "Root node(should be 11): " << myHeap.peek() << std::endl;
   std::cout << "Size(should be 8): " << myHeap.size() << std::endl;
 
   std::cout << "Remove" << std::endl;  
-  myHeap.remove();
-  myHeap.remove();
-  myHeap.remove();
-  myHeap.remove();
-  myHeap.remove();
-  myHeap.remove();
-  myHeap.remove();
-  myHeap.remove();
+  while(!myHeap.is_empty()){
+    myHeap.remove();
+    myHeap.preorder();
+  }
   std::cout << std::endl;
 
   std::cout << "Conducting tests on a Maximum Value Heap with given values" << std::endl;
   Heap<int, CompareMax<int>> myHeap2;
 
   std::cout << "Insert" << std::endl;
-  myHeap2.insert(67);
-  myHeap2.insert(88);
-  myHeap2.insert(77);
-  myHeap2.insert(52);
-  myHeap2.insert(44);
-  myHeap2.insert(11);
-  myHeap2.insert(66);
-  myHeap2.insert(93);
+  for(int i = 0; i < 8; i++){
+    myHeap2.insert(test[i]);
+    myHeap2.preorder();
+  }
   std::cout << std::endl;
 
   std::cout << "Testing Copy Constructor" << std::endl;
   std::cout << "Original heap: ";
   myHeap2.preorder();
   std::cout << std::endl;
-  Heap<int, CompareMax<int>> test(myHeap2);
+  Heap<int, CompareMax<int>> test1(myHeap2);
   std::cout << "Copied heap: ";
-  test.preorder();
+  test1.preorder();
   std::cout << std::endl;
 
   std::cout << "Testing assignment operator" << std::endl;
@@ -145,14 +134,10 @@ try{
   std::cout << "Root node(should be 93): " << myHeap2.peek() << std::endl << std::endl;
 
   std::cout << "Remove" << std::endl;
-  myHeap2.remove();
-  myHeap2.remove();
-  myHeap2.remove();
-  myHeap2.remove();
-  myHeap2.remove();
-  myHeap2.remove();
-  myHeap2.remove();
-  myHeap2.remove();
+  while(!myHeap2.is_empty()){
+    myHeap2.remove();
+    myHeap2.preorder();
+  }
   std::cout << std::endl;
 
   std::cout << "Checking Heapify" << std::endl;
@@ -175,27 +160,31 @@ try{
 
   std::cout << "Insert" << std::endl;
   pixels.insert(pixel(255, 255 ,255, "white"));
+  pixels.preorder();
   pixels.insert(pixel(0, 0, 0, "black"));      
+  pixels.preorder();
   pixels.insert(pixel(128, 0, 128, "purple")); 
+  pixels.preorder();
   pixels.insert(pixel(165, 42, 42, "brown"));  
+  pixels.preorder();
   pixels.insert(pixel(255, 165, 0, "orange")); 
+  pixels.preorder();
   pixels.insert(pixel(255, 255, 0, "yellow")); 
+  pixels.preorder();
   pixels.insert(pixel(255, 229, 180, "peach"));
+  pixels.preorder();
   pixels.insert(pixel(144, 238, 144, "light green"));
+  pixels.preorder();
   std::cout << std::endl;
 
   std::cout << "Root node(should be black): " << pixels.peek() << std::endl;
   std::cout << std::endl;
 
   std::cout << "Remove" << std::endl;
-  pixels.remove();
-  pixels.remove();
-  pixels.remove();
-  pixels.remove();
-  pixels.remove();
-  pixels.remove();
-  pixels.remove();
-  pixels.remove();
+  while(!pixels.is_empty()){
+    pixels.remove();
+    pixels.preorder();
+  }
   std::cout << std::endl;
 
   std::cout << "Sort by lightest shade at root" << std::endl << std::endl; 
@@ -203,26 +192,30 @@ try{
   Heap<pixel, CompareMax<pixel>> pixels2;
   std::cout << "Insert" << std::endl;
   pixels2.insert(pixel(255, 255 ,255, "white"));
+  pixels2.preorder();
   pixels2.insert(pixel(0, 0, 0, "black"));      
+  pixels2.preorder();
   pixels2.insert(pixel(128, 0, 128, "purple")); 
+  pixels2.preorder();
   pixels2.insert(pixel(165, 42, 42, "brown"));  
+  pixels2.preorder();
   pixels2.insert(pixel(255, 165, 0, "orange")); 
+  pixels2.preorder();
   pixels2.insert(pixel(255, 255, 0, "yellow")); 
+  pixels2.preorder();
   pixels2.insert(pixel(255, 229, 180, "peach"));
+  pixels2.preorder();
   pixels2.insert(pixel(144, 238, 144, "light green"));
+  pixels2.preorder();
   std::cout << std::endl;
 
   std::cout << "Root node(should be white): " << pixels2.peek() << std::endl << std::endl;
 
   std::cout << "Remove" << std::endl;
-  pixels2.remove();
-  pixels2.remove();
-  pixels2.remove();
-  pixels2.remove();
-  pixels2.remove();
-  pixels2.remove();
-  pixels2.remove();
-  pixels2.remove();
+  while(!pixels.is_empty()){
+    pixels2.remove();
+    pixels2.preorder();
+  }
   std::cout << std::endl; 
   } catch(const char* msg){
     std::cout << msg << std::endl;
